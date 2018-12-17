@@ -1,0 +1,34 @@
+Commands
+
+
+Step 1 — Installing Git on Ubuntu
+	Option 1 – Installing Git With Apt
+		apt-cache policy git
+		sudo apt-get install git
+	Option 2 – Installing Git from GitHub
+		sudo apt-get install libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev
+
+	Now visit this link and download the version you want to install: https://github.com/git/git/releases
+
+	unzip git-2.20.0-rc2
+	
+	cd git-2.20.0-rc2
+	
+	Now install git locally by running:
+	make prefix=/usr/local all
+	prefix=/usr/local install
+	
+Step 2 — Configuring Git
+	Once you have successfully installed Git you will need to configure it. Set your username instead of user_name in the following command:
+	git config --global user.name "user_name"
+
+	Now enter your email address instead of email@domain.com.
+	git config --global user.email "email@domain.com"
+	
+
+
+To see more git commands use:
+
+git --help
+
+
