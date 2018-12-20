@@ -4,7 +4,9 @@ import ReactDOM from 'react-dom';
 import AddEmployee from "./AddEmployee";
 import ViewEmployee from "./ViewEmployee";
 import Home from "./Home";
-import Histogram from "./Histogram";
+//import Histogram from "./Histogram";
+import Scatter from './Scatter';
+import Statistics from './Statistics';
 
 class Nav extends Component {
 /* Renders a Navigation  */
@@ -38,7 +40,7 @@ handleAdd()
 
 handleStatistics()
 {
-    ReactDOM.render(<Histogram/>, document.getElementById('empview'));
+    ReactDOM.render(<Statistics />, document.getElementById('empview'));
 }
 
 
@@ -52,7 +54,7 @@ handleStatistics()
                   <li><a onClick={this.handleHome}>Home</a></li>
                   <li><a onClick={this.handleView}>View Employee</a></li>
                   <li><a onClick={this.handleAdd}>Add Employee</a></li>
-                  <li><a onClick={this.handleStatistics}>Statistics</a></li>
+                  <li><a  onClick={this.handleStatistics}>Statistics</a></li>
                 </ul>
             </nav>
             

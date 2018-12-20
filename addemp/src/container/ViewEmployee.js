@@ -33,7 +33,7 @@ class ViewEmployee extends Component {
         });
     
     /* fetch the employee details from server on port 5000 */
-   fetch("http://localhost:5001/", {
+   fetch("http://localhost:5002/", {
      headers: myHeaders,      
     })
     .then(response => {
@@ -42,6 +42,7 @@ class ViewEmployee extends Component {
     })
     .then(data => {
             console.log(data);
+            //alert(data);
             this.setState({ data });
           });
       
@@ -52,7 +53,7 @@ class ViewEmployee extends Component {
   renderTable = () =>
   {
         
-    return this.state.data.map(value=>{
+    return this.state.data[0].view.map(value=>{
     return (
           
       <tr>

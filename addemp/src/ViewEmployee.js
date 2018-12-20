@@ -33,7 +33,7 @@ class ViewEmployee extends Component {
         });
     
     /* fetch the employee details from server on port 5000 */
-   fetch("http://localhost:5001/", {
+   fetch("http://localhost:5002/", {
      headers: myHeaders,      
     })
     .then(response => {

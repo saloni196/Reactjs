@@ -119,7 +119,7 @@ class AddEmployee extends Component{
         }
     
         /* Stringify the emp object and send request to server listening on port 5000 */
-        axios.post("http://localhost:5001/",querystring.stringify(emp))
+        axios.post("http://localhost:5002/",querystring.stringify(emp))
         .then(res => { console.log(res.data);
             ReactDOM.render(<Home/>, document.getElementById('empview'));
         })

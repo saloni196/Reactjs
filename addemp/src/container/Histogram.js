@@ -99,7 +99,8 @@ constructor(props)
                   <th> Total </th>
                 </tr>
                 
-                {this.state && this.state.data && this.renderTable()}
+                {//this.state && this.state.data && this.renderTable()
+                }
 
               </tbody>
             </table>

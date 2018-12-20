@@ -13,7 +13,7 @@ class Footer extends Component {
 
             <footer>
                 <marquee direction="right">
-                    <h4>Product Horizon</h4>
+                    <h4>Product Horizons</h4>
                 </marquee>
             </footer>
 
