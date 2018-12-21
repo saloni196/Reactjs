@@ -74,6 +74,8 @@ article {
   height: auto; 
   min-height: 778px;
   border-left: 1px dashed black;
+  min-width: 80%;
+
 }
 
 /* Clear floats after the columns */
@@ -103,13 +105,22 @@ section:after {
 
 
 /* Style the table border*/
-table{
+tableV{
   border: 2px solid black;
   text-align: left;
   border-collapse: collapse;
   width: 50%;
   margin-left: 25% ;
 }
+
+.tab{
+  border: 2px solid black;
+  text-align: center;
+  border-collapse: collapse;
+  width:20%;
+  margin-left:  30%;
+}
+
 
 /* Style table heading */
 th{

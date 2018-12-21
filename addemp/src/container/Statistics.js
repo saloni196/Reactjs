@@ -6,7 +6,7 @@ import * as d3 from "d3";
 class Statistics extends Component {
     state={
         data:[{
-                histogram:[{emp_id:'0',emp_name:'ZZ',dept_name:'ZZ',emp_ht:'0',emp_sal:'0'}],
+                graph:[{emp_id:'0',emp_name:'ZZ',dept_name:'ZZ',emp_ht:'0',emp_sal:'0'}],
                 view:[{Name:'QQ',Designation:'QQ',Salary:'0'}],
                 dept:[{dept_id:0, dept_name:'--Select--'}]
             }],
@@ -16,10 +16,11 @@ class Statistics extends Component {
             }       
         ],
         t_dept_id:'0',
-        t_dept_name:'--Select--',
+
         
     }
 
+    tab=[{values:{}}];
     constructor(props)
     {
         super(props);
@@ -27,7 +28,7 @@ class Statistics extends Component {
         this.renderScatter=this.renderScatter.bind(this);
         this.handleChange=this.handleChange.bind(this);
         this.renderTable=this.renderTable.bind(this);
-        this.count=this.count.bind(this);
+        
     }
 
     componentDidMount()
@@ -38,7 +39,7 @@ class Statistics extends Component {
         Accept: "application/json"
           });
       
-      // fetch the employee details from server on port 5000 
+      // fetch the employee details from server
      fetch("http://localhost:5002/", {
        headers: myHeaders,      
       })
@@ -47,20 +48,13 @@ class Statistics extends Component {
         return response.json();
       })
       .then(data => {
-              //console.log(data);          
-              this.setState({ data });
-              //alert(data[0].histogram[0].emp_sal+ "-" + data[0].histogram[0].emp_name+"-"+data[0].histogram[0].dept_name);
+            this.setState({ data });
+              
   
-            });
-
-
-        
-
-        
+        });       
   
         
     }
-
 
     scatterplot(did)
     {
@@ -68,22 +62,21 @@ class Statistics extends Component {
 
 
         var dataset=[];
-        var i;
         
         var json={};
 
         d3.selectAll("svg").remove();
 
         
-        if(this.state.data[0].histogram.length>1 && did!=0)
+        if(this.state.data[0].graph.length>1 && did!=0)
         {
 
-            for ( i=0; i<this.state.data[0].histogram.length; i++)
+            for (var i=0; i<this.state.data[0].graph.length; i++)
             {
-                if(parseInt(this.state.data[0].histogram[i].dept_id)==did)
+                if(parseInt(this.state.data[0].graph[i].dept_id)==did)
                 {
-                    const ht=parseInt(this.state.data[0].histogram[i].emp_ht);
-                    const sal=parseInt(this.state.data[0].histogram[i].emp_sal);
+                    const ht=parseInt(this.state.data[0].graph[i].emp_ht);
+                    const sal=parseInt(this.state.data[0].graph[i].emp_sal);
                     const arr=[];
                     
                     arr.push(ht);
@@ -106,7 +99,6 @@ class Statistics extends Component {
             
             var yScale=d3.scaleLinear().domain([0,1600000]).range([480,100]).clamp(true);
             
-            
             var xAxis=d3.axisBottom()
             .scale(xScale).ticks(12);
             
@@ -119,7 +111,7 @@ class Statistics extends Component {
             .attr("width", 800)
             .attr("height", 530);
             
-            
+            var h=0,s=0;
             svg.selectAll("circle")
             .data(dataset)
             .enter()
@@ -132,26 +124,6 @@ class Statistics extends Component {
             })
             .attr("r", "1")
             .style("fill","red");
-
-
-            /*
-            svg.selectAll("text")
-            .data(dataset)
-            .enter()
-            .append("text")
-            .text(function(d) {
-            return "  "+ d[0] + "," + d[1];
-            })
-            .attr("x", function(d) {
-            return xScale(d[0]);
-            })
-            .attr("y", function(d) {
-            return yScale(d[1]);
-            })
-            .attr("font-family", "sans-serif")
-            .attr("font-size", "8px")
-            .attr("fill", "green");
-            */
 
             svg.append("g")
             .attr("className", "axis") 
@@ -167,6 +139,32 @@ class Statistics extends Component {
             .style("visibility","visible");
             d3.select(".xlabel").style("visibility","visible");
             d3.select(".ylabel").style("visibility","visible");
+
+
+
+
+            svg.selectAll("text")
+            .data(dataset)
+            .enter()
+            .append("text")
+     .text(function(d) {
+             return d[0] + "," + d[1];
+        })
+        .attr("x", function(d) {
+         return xScale(d[0]);
+     })
+     .attr("y", function(d) {
+         return yScale(d[1]);
+     })
+     .attr("font-family", "sans-serif")
+     .attr("font-size", "11px")
+     .attr("fill", "green").style("visibility","hidden");
+
+
+
+
+
+            
         }
         else{
             d3.selectAll("div.SPT")
@@ -174,6 +172,11 @@ class Statistics extends Component {
             d3.select(".xlabel").style("visibility","hidden");
             d3.select(".ylabel").style("visibility","hidden");
         }
+
+
+
+
+        
         
     }
 
@@ -190,19 +193,21 @@ class Statistics extends Component {
       
     }
 
-    renderTable =()=>{
-        
-        return this.state.data[0].histogram.map(value=>{
-            if(this.state.t_dept_id==value.dept_id){
+    renderTable =(tab)=>{
+
+
+        return Object.keys(tab[0].values).map(value=>{
+           
             return (
                 
                 <tr>                   
-                    <td> {value.emp_id} </td>
-                    <td> {value.emp_name} </td>
-                    <td> {value.emp_sal} </td>
-                    <td> {value.emp_ht} </td>
+                    <td> {value} </td>      
+                    {//JSON.stringify(tab[0].values[value].id).replace(/"/g," ").substring(1,JSON.stringify(tab[0].values[value].id).replace(/"/g," ").length-1)
+                    }
+                    <td> {tab[0].values[value].total}</td>
+                    
                 </tr>
-            )}
+            )
           
           }) 
           
@@ -216,16 +221,6 @@ class Statistics extends Component {
     }
 
 
-    count(val,tab)
-    {	
-     
-          
-    	  
-      
-
-      
-    }
-
 
     render()
     {
@@ -233,31 +228,52 @@ class Statistics extends Component {
         var l=150;
         var cnt=5;
         var u=l+cnt;
-        var tab=[{        
-                    values:{},
-                }];
 
+        var tab=[{values:{}}];
         var label="";
-        for(var i=0;u<=180 ; i++)
+
+        for(var i=0;u<=190 ; i++)
           {
                 label=l+"-"+u;
                 var xy={};
                 xy[label]=0;
-                tab[0].values[label]=0;
+                tab[0].values[label]={id:[],total:0};
               
                 l=u+1;
                 u=u+cnt;
           }
-          alert(tab[0].values.length);
-          var val=0;
-          for(var i=0; i<this.state.data[0].histogram.length; i++)
-			  {
-				val=this.state.data[0].histogram.emp_ht;
-				
-				this.count(val,tab);
-				
-			  }
-              console.log(tab);
+
+
+        var val=0;
+        for(var i=0; i<this.state.data[0].graph.length; i++)
+		{
+            if(this.state.data[0].graph[i].dept_id==this.state.t_dept_id)
+            {
+                val=parseInt(this.state.data[0].graph[i].emp_ht);
+                
+                if(isNaN(val)==false)
+                {
+                   var l=0,u=0;
+                
+                    for(var x in tab[0].values)
+                    {
+                        var arr=x.split('-');
+                        l=parseInt(arr[0]);
+                        u=parseInt(arr[1]);
+                        if(val>=l && val<=u)
+                        {
+                            var json={};
+                            tab[0].values[x].total=tab[0].values[x].total+1;
+                            tab[0].values[x].id.push(this.state.data[0].graph[i].emp_id);
+                        }
+                    
+                    }
+                }
+            }
+        }
+		
+            
+
 
         return(
             <div> <label className="ylabel"> <b> Salary of Employees </b> </label>
@@ -266,25 +282,30 @@ class Statistics extends Component {
                     Select Department Name &nbsp;&nbsp; : &nbsp;&nbsp;
                     <select onChange={this.handleChange} value={this.state.t_dept_id}>               
                         <option value={0}>- - Select - -</option>
-                        {this.state && this.state.data && this.renderScatter()}
+                        {this.renderScatter()}
                     </select>
                 </div>
 
-                <label className="xlabel"><b>  Heights of Employees </b></label>
+                <label className="xlabel"><b>  Height of Employees </b></label>
+
                 <br/><br/>    <br/><br/>   <br/><br/>       <br/><br/>
+
                 <div className="SPT">
-                <table >
+                <table className="tab">
                     <tbody>
                     <tr>
-                        <th> Id </th>
-                        <th> Name </th>
-                        <th> Salary </th>
-                        <th> Height </th>
+                        <th> Range </th>    
+                        <th> Total </th>
                     </tr>
-                    {this.state && this.state.data && this.renderTable()}
+
+                    {this.renderTable(tab)}
+
                     </tbody>
+
                 </table>
+
                 </div>
+
             </div>
         )
     }
